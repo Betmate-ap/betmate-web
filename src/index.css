@@ -1,111 +1,192 @@
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "tw-animate-css";
+
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* ── Typography ── */
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* ────────────────────────────────────────────────
+     BetMate Brand Palette — 40 / 40 / 10 / 10
+
+     Blue  (40%) — primary:   nav, buttons, links, "your pick" side
+     Gold  (40%) — secondary: opponent side, rewards, ranks, wins
+     Cyan  (10%) — texture:   gradients, glows, rings — never standalone
+     Status(10%) — contextual: red=live/danger, green=win, yellow=pending
+  ──────────────────────────────────────────────── */
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-gold: var(--gold);
+  --color-gold-hover: var(--gold-hover);
+  --color-gold-foreground: #ffffff;
+  --color-gold-light: var(--gold-light);
+  --color-sky: var(--sky);
+  --color-sky-hover: var(--sky-hover);
+
+  /* ── Surface & text tokens ── */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border-color);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+
+  /* ── Status colours (industry standard — green / red / amber) ── */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-destructive: var(--destructive);
+
+  /* ── shadcn / Base UI expected tokens ── */
+  --color-foreground: var(--text-primary);
+  --color-primary: var(--accent);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--surface-raised);
+  --color-secondary-foreground: var(--text-primary);
+  --color-muted: var(--surface-raised);
+  --color-muted-foreground: var(--text-secondary);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--text-primary);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--text-primary);
+  --color-ring: var(--accent);
+  --color-input: var(--border-color);
+  --color-destructive-foreground: #ffffff;
+
+  /* ── Radius ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+
+/* ── Light mode ── */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Surfaces */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-raised: #f1f5f9;
+  --border-color: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* Primary brand — Electric Blue (40%) */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  /* Secondary brand — Gold / Amber (35% strong + 10% tint) */
+  --gold: #d97706;
+  --gold-hover: #b45309;
+  --gold-light: color-mix(in srgb, var(--gold) 18%, var(--surface));
+
+  /* Tertiary texture — Sky / Cyan (10%) — effects only, not standalone */
+  --sky: #0ea5e9;
+  --sky-hover: #0284c7;
+
+  /* Status colours — contextual only, never used as brand (10%) */
+  --success: #059669;
+  --warning: #ca8a04;
+  --destructive: #e11d48;
+
+  /* Third-party aliases */
+  --radius: 10px;
+  --border: var(--border-color);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-primary);
+}
+
+/* ── Dark mode ── */
+.dark {
+  /* Surfaces */
+  --background: #020617;
+  --surface: #0f172a;
+  --surface-raised: #1e293b;
+  --border-color: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+
+  /* Primary brand — lighter blue for dark backgrounds */
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+
+  /* Secondary brand — brighter gold for dark backgrounds */
+  --gold: #f59e0b;
+  --gold-hover: #fbbf24;
+  --gold-light: color-mix(in srgb, var(--gold) 12%, var(--surface));
+
+  /* Tertiary texture — brighter sky for dark backgrounds */
+  --sky: #38bdf8;
+  --sky-hover: #7dd3fc;
+
+  /* Status colours */
+  --success: #10b981;
+  --warning: #facc15;
+  --destructive: #fb7185;
+}
+
+/* ── Base resets ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-color: var(--border-color);
+}
+
+html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--background);
+  color: var(--text-primary);
+  min-height: 100svh;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+@keyframes betmate-toast-progress {
+  from { width: 100%; }
+  to   { width: 0%; }
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+/* ── Scrollbar (dark mode) ── */
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--surface-raised);
+  border-radius: 3px;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* ── Focus ring ── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Selection ── */
+::selection {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
 }

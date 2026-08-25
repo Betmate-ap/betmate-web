@@ -20,9 +20,10 @@
 11. [Fun Moments (Animals & Celebrations)](#11-fun-moments-animals--celebrations)
 12. [Images & Assets Strategy](#12-images--assets-strategy)
 13. [Code Organisation Rules](#13-code-organisation-rules)
-14. [Logging & Comments Standard](#14-logging--comments-standard)
-15. [Browser & Device Support](#15-browser--device-support)
-16. [What NOT to Do](#16-what-not-to-do)
+14. [Component Architecture Standard](#14-component-architecture-standard)
+15. [Logging & Comments Standard](#15-logging--comments-standard)
+16. [Browser & Device Support](#16-browser--device-support)
+17. [What NOT to Do](#17-what-not-to-do)
 
 ---
 
@@ -61,37 +62,69 @@ The old BetMate project (`old betmate/`) is the reference for **what to avoid**:
 
 ## 3. Color System & Theming
 
-### Brand Palette
+### Brand Palette — 35 / 10 / 35 / 10 / 10 Rule
 
-The app uses a **slate-base + indigo-accent + amber-highlight** palette.
+BetMate uses a **dual-brand colour system** built on the head-to-head nature of the app: every bet is Blue vs Gold. The two brand families are symmetric — each has a strong colour for prominent use and a lighter tint for backgrounds and texture.
 
-| Token            | Light Mode           | Dark Mode             | Usage                                 |
-| ---------------- | -------------------- | --------------------- | ------------------------------------- |
-| `background`     | `slate-50` (#F8FAFC) | `slate-950` (#020617) | Page background                       |
-| `surface`        | `white`              | `slate-900` (#0F172A) | Cards, modals, panels                 |
-| `surface-raised` | `slate-100`          | `slate-800` (#1E293B) | Elevated cards, dropdowns             |
-| `border`         | `slate-200`          | `slate-700`           | Dividers, input borders               |
-| `text-primary`   | `slate-900`          | `slate-50`            | Headings, body                        |
-| `text-secondary` | `slate-500`          | `slate-400`           | Captions, labels                      |
-| `accent`         | `indigo-600`         | `indigo-500`          | Primary buttons, links, active states |
-| `accent-hover`   | `indigo-700`         | `indigo-400`          | Hover states                          |
-| `success`        | `emerald-600`        | `emerald-500`         | Win, accepted, completed              |
-| `warning`        | `amber-500`          | `amber-400`           | Pending, toss, upcoming               |
-| `destructive`    | `rose-600`           | `rose-500`            | Error, decline, cancel                |
-| `highlight`      | `amber-400`          | `amber-300`           | Points, leaderboard rank, toss winner |
+#### Blue family (45% total)
+
+| Token    | Role              | Light              | Dark               | Proportion | Usage                                                        |
+| -------- | ----------------- | ------------------ | ------------------ | ---------- | ------------------------------------------------------------ |
+| `accent` | **Blue — Strong** | `#2563eb` blue-600 | `#3b82f6` blue-500 | **35%**    | Nav, primary buttons, links, active states, "your pick" side |
+| `sky`    | **Blue — Tint**   | `#0ea5e9` sky-500  | `#38bdf8` sky-400  | **10%**    | Card backgrounds on blue side, gradients, glows, rings       |
+
+#### Gold family (45% total)
+
+| Token        | Role              | Light                        | Dark                           | Proportion | Usage                                                       |
+| ------------ | ----------------- | ---------------------------- | ------------------------------ | ---------- | ----------------------------------------------------------- |
+| `gold`       | **Gold — Strong** | `#d97706` amber-600          | `#f59e0b` amber-400            | **35%**    | Opponent side, rewards, rank, wins, points, trophies, coin  |
+| `gold-light` | **Gold — Tint**   | `color-mix(gold 15%, white)` | `color-mix(gold 18%, surface)` | **10%**    | Card backgrounds on gold side, subtle tints, hover surfaces |
+
+#### The Blue vs Gold duality
+
+This is the core design language. Use it everywhere a choice or competition is expressed:
+
+- Match/bet cards: **blue side** (sky tint bg + accent text) = your pick · **gold side** (gold-light bg + gold text) = opponent
+- Leaderboard: your row highlighted in blue, #1 rank in gold
+- Coin toss: heads = blue, tails = gold
+- Logo: bolt top = blue, bolt tip = gold — both halves of the wordmark
+- Buttons: blue (`default`) for your actions · gold for opponent/challenge actions
+
+#### Status colours (industry standard — not brand colours)
+
+| Token         | Light     | Dark      | Usage                                           |
+| ------------- | --------- | --------- | ----------------------------------------------- |
+| `success`     | `#059669` | `#10b981` | Win, profit, accepted, completed                |
+| `warning`     | `#ca8a04` | `#facc15` | Pending, upcoming — yellow (distinct from gold) |
+| `destructive` | `#e11d48` | `#fb7185` | Error, loss, cancel, LIVE badge                 |
+
+> Note: `--warning` (yellow) and `--gold` (amber) are intentionally different hues so status warnings are never confused with brand gold.
+
+#### Surface & text (neutral system)
+
+| Token            | Light     | Dark      | Usage                     |
+| ---------------- | --------- | --------- | ------------------------- |
+| `background`     | `#f8fafc` | `#020617` | Page background           |
+| `surface`        | `#ffffff` | `#0f172a` | Cards, modals, panels     |
+| `surface-raised` | `#f1f5f9` | `#1e293b` | Elevated cards, dropdowns |
+| `border-color`   | `#e2e8f0` | `#334155` | Dividers, input borders   |
+| `text-primary`   | `#0f172a` | `#f8fafc` | Headings, body text       |
+| `text-secondary` | `#64748b` | `#94a3b8` | Captions, labels          |
+
+### Colour Rules — read before writing any component
+
+- **Only use CSS tokens** (`var(--accent)`, `var(--gold)`, `var(--sky)`) — never hardcode hex values except inside `index.css`
+- **Blue vs Gold duality is the core language** — whenever something is competitive or binary (your side vs theirs), use blue and gold to express it
+- **Sky is texture only** — never use `--sky` as the sole colour of a UI element. Use it inside gradients, glow effects, or as a ring colour on active states. Not for buttons, badges, or text on its own.
+- **Status colours are contextual only** — never use green/red/yellow as decorative or brand colours. They appear only in win/loss/pending/live states.
+- **No new colours** — if you need a shade, use opacity variants: `color-mix(in srgb, var(--accent) 15%, transparent)`
+- **Both themes must look equally polished** — test every component in light and dark before shipping
 
 ### Theme Implementation
 
-- Use **CSS custom properties** via Tailwind's theme system — every colour token maps to a CSS variable
-- `dark` class on `<html>` element (not `prefers-color-scheme` only — user must be able to toggle)
-- Default: **dark mode** (sports/gaming apps default dark)
-- Theme preference stored in `localStorage` and synced on load
-- Both themes must look equally polished — test every component in both before shipping
-
-### Do Not
-
-- Use raw Tailwind colour classes like `bg-indigo-600` in components — always use semantic tokens (`bg-accent`) so themes work automatically
-- Mix colour families randomly — stick to the palette above
+- CSS custom properties via Tailwind `@theme inline` — every token maps to a utility class
+- `dark` class on `<html>` element — user-controlled toggle, stored in `localStorage`
+- Default: **dark mode**
 
 ---
 
@@ -365,7 +398,91 @@ Rules:
 
 ---
 
-## 14. Logging & Comments Standard
+## 14. Component Architecture Standard
+
+> **Read this before writing any component or page.**
+
+### The Rule: Components own their variants. Pages own their data.
+
+A page should call a component with props — not reconstruct its internals inline. If you find yourself writing the same structure twice, or writing raw HTML inside a page to build something that looks like a reusable widget, stop and make a component.
+
+**Wrong — raw patterns inline at the page level:**
+
+```tsx
+// Repeated 8 times in the form section — this is the problem
+<div className="flex flex-col gap-2">
+  <label className="text-xs font-medium text-muted-foreground">Email address</label>
+  <div className="relative">
+    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+    <Input placeholder="you@example.com" type="email" className="pl-9" />
+  </div>
+  <p className="text-xs text-destructive">Invalid email</p>
+</div>
+```
+
+**Right — component handles all variants via props:**
+
+```tsx
+<FormField label="Email address" error="Invalid email">
+  <Input type="email" leadingIcon={Mail} placeholder="you@example.com" />
+</FormField>
+```
+
+### Built-in reusable components
+
+Use these everywhere instead of building the equivalent inline:
+
+| Component     | Location                | Props                                                                         |
+| ------------- | ----------------------- | ----------------------------------------------------------------------------- |
+| `FormField`   | `ui/form-field.tsx`     | `label`, `required`, `error`, `hint`, `className`                             |
+| `StatCard`    | `ui/stat-card.tsx`      | `icon`, `label`, `value`, `colorVar`                                          |
+| `StatusBadge` | `ui/status-badge.tsx`   | `variant` (won/lost/pending/accepted/declined/live)                           |
+| `AppDialog`   | `ui/app-dialog.tsx`     | `trigger`, `icon`, `iconVariant`, `title`, `description`, `body`, `actions[]` |
+| `CountTabs`   | `ui/count-tabs.tsx`     | `items[]` (value/label/count/live), `defaultValue`, `onValueChange`           |
+| `Button`      | `ui/button.tsx`         | `variant`, `size`, `icon`, `loading`                                          |
+| `Badge`       | `ui/badge.tsx`          | `variant`, `icon`                                                             |
+| `UserAvatar`  | `ui/user-avatar.tsx`    | `userId`, `name`, `src`, `size`                                               |
+| `AvatarDuo`   | `ui/user-avatar.tsx`    | `challenger`, `challengee`, `size`                                            |
+| `AvatarStack` | `ui/user-avatar.tsx`    | `users[]`, `max`                                                              |
+| `Input`       | `ui/input.tsx`          | `leadingIcon`, `trailingIcon`, all native props                               |
+| `LogoLoader`  | `shared/LogoLoader.tsx` | `size`, `showWordmark`                                                        |
+
+### How to decide: component vs inline
+
+Make a component when:
+
+- The same visual pattern appears more than once (across pages or within a page)
+- A pattern has multiple states (error, disabled, loading, variants)
+- The pattern has internal logic or classes that shouldn't leak into pages
+- You find yourself copying and adjusting a block of JSX
+
+Keep it inline when:
+
+- It's a truly one-off layout unique to that page
+- It's demo or dev-only code (Playground sections like skeletons, palette swatches)
+- Extracting it would require more props than JSX lines
+
+### Page code should read like a config, not an implementation
+
+A well-built page component reads like a list of what to show, not how to render it:
+
+```tsx
+// Good — page is declarative
+<FormField label="Username" required error={errors.username?.message}>
+  <Input placeholder="betmaster99" />
+</FormField>
+
+// Bad — page knows too much about layout mechanics
+<div className="flex flex-col gap-2">
+  <label className="text-xs font-medium ...">Username <span className="text-destructive">*</span></label>
+  <Input placeholder="betmaster99" />
+  {errors.username && <p className="text-xs text-destructive">{errors.username.message}</p>}
+</div>
+```
+
+---
+
+## 15. Logging & Comments Standard
 
 ### Console Logging
 
@@ -389,7 +506,7 @@ console.warn("[CoinFlip]", "Toss already done");
 
 ---
 
-## 15. Browser & Device Support
+## 16. Browser & Device Support
 
 | Browser        | Min version                           |
 | -------------- | ------------------------------------- |
@@ -410,7 +527,7 @@ Rules:
 
 ---
 
-## 16. What NOT to Do
+## 17. What NOT to Do
 
 - ❌ No `alert()`, `confirm()`, `prompt()` — use `Dialog` components
 - ❌ No inline styles — use Tailwind classes
@@ -437,4 +554,4 @@ Pages that existed: LandingPage, SignIn, SignUp, HomePage (matches + betmate sel
 
 ---
 
-_Last updated: August 2026_
+_Last updated: August 2026 — colour system updated to 35/10/35/10/10 (Blue family + Gold family, symmetric dual-brand)_
