@@ -1,3 +1,4 @@
+import * as React from "react";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -10,12 +11,12 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        blue: "bg-accent/10 text-accent ring-1 ring-accent/30 [a]:hover:bg-accent/15",
+        gold: "bg-gold/10 text-gold ring-1 ring-gold/30 [a]:hover:bg-gold/15",
         secondary: "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
         destructive:
-          "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
+          "bg-destructive/10 text-destructive ring-1 ring-destructive/25 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
         outline: "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
-        ghost: "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
-        link: "text-primary underline-offset-4 hover:underline",
       },
     },
     defaultVariants: {
@@ -27,14 +28,25 @@ const badgeVariants = cva(
 function Badge({
   className,
   variant = "default",
+  icon: Icon,
   render,
+  children,
   ...props
-}: useRender.ComponentProps<"span"> & VariantProps<typeof badgeVariants>) {
+}: useRender.ComponentProps<"span"> &
+  VariantProps<typeof badgeVariants> & { icon?: React.ElementType }) {
   return useRender({
     defaultTagName: "span",
     props: mergeProps<"span">(
       {
         className: cn(badgeVariants({ variant }), className),
+        children: Icon ? (
+          <>
+            {<Icon />}
+            {children}
+          </>
+        ) : (
+          children
+        ),
       },
       props
     ),

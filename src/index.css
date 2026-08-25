@@ -12,19 +12,51 @@
   /* ── Typography ── */
   --font-sans: "Inter", system-ui, sans-serif;
 
-  /* ── Semantic colour tokens (light mode defaults) ── */
+  /* ────────────────────────────────────────────────
+     BetMate Brand Palette — 40 / 40 / 10 / 10
+
+     Blue  (40%) — primary:   nav, buttons, links, "your pick" side
+     Gold  (40%) — secondary: opponent side, rewards, ranks, wins
+     Cyan  (10%) — texture:   gradients, glows, rings — never standalone
+     Status(10%) — contextual: red=live/danger, green=win, yellow=pending
+  ──────────────────────────────────────────────── */
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-gold: var(--gold);
+  --color-gold-hover: var(--gold-hover);
+  --color-gold-foreground: #ffffff;
+  --color-gold-light: var(--gold-light);
+  --color-sky: var(--sky);
+  --color-sky-hover: var(--sky-hover);
+
+  /* ── Surface & text tokens ── */
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
   --color-border: var(--border-color);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
+
+  /* ── Status colours (industry standard — green / red / amber) ── */
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-destructive: var(--destructive);
-  --color-highlight: var(--highlight);
+
+  /* ── shadcn / Base UI expected tokens ── */
+  --color-foreground: var(--text-primary);
+  --color-primary: var(--accent);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--surface-raised);
+  --color-secondary-foreground: var(--text-primary);
+  --color-muted: var(--surface-raised);
+  --color-muted-foreground: var(--text-secondary);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--text-primary);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--text-primary);
+  --color-ring: var(--accent);
+  --color-input: var(--border-color);
+  --color-destructive-foreground: #ffffff;
 
   /* ── Radius ── */
   --radius-sm: 6px;
@@ -34,36 +66,68 @@
   --radius-full: 9999px;
 }
 
-/* ── Light mode tokens ── */
+/* ── Light mode ── */
 :root {
+  /* Surfaces */
   --background: #f8fafc;
   --surface: #ffffff;
   --surface-raised: #f1f5f9;
   --border-color: #e2e8f0;
   --text-primary: #0f172a;
   --text-secondary: #64748b;
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
+
+  /* Primary brand — Electric Blue (40%) */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+
+  /* Secondary brand — Gold / Amber (35% strong + 10% tint) */
+  --gold: #d97706;
+  --gold-hover: #b45309;
+  --gold-light: color-mix(in srgb, var(--gold) 18%, var(--surface));
+
+  /* Tertiary texture — Sky / Cyan (10%) — effects only, not standalone */
+  --sky: #0ea5e9;
+  --sky-hover: #0284c7;
+
+  /* Status colours — contextual only, never used as brand (10%) */
   --success: #059669;
-  --warning: #f59e0b;
+  --warning: #ca8a04;
   --destructive: #e11d48;
-  --highlight: #fbbf24;
+
+  /* Third-party aliases */
+  --radius: 10px;
+  --border: var(--border-color);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-primary);
 }
 
-/* ── Dark mode tokens ── */
+/* ── Dark mode ── */
 .dark {
+  /* Surfaces */
   --background: #020617;
   --surface: #0f172a;
   --surface-raised: #1e293b;
   --border-color: #334155;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  --accent: #6366f1;
-  --accent-hover: #818cf8;
+
+  /* Primary brand — lighter blue for dark backgrounds */
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+
+  /* Secondary brand — brighter gold for dark backgrounds */
+  --gold: #f59e0b;
+  --gold-hover: #fbbf24;
+  --gold-light: color-mix(in srgb, var(--gold) 12%, var(--surface));
+
+  /* Tertiary texture — brighter sky for dark backgrounds */
+  --sky: #38bdf8;
+  --sky-hover: #7dd3fc;
+
+  /* Status colours */
   --success: #10b981;
-  --warning: #fbbf24;
+  --warning: #facc15;
   --destructive: #fb7185;
-  --highlight: #fcd34d;
 }
 
 /* ── Base resets ── */
@@ -96,6 +160,11 @@ body {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
+}
+
+@keyframes betmate-toast-progress {
+  from { width: 100%; }
+  to   { width: 0%; }
 }
 
 /* ── Scrollbar (dark mode) ── */
