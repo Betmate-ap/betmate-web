@@ -167,6 +167,58 @@ body {
   to   { width: 0%; }
 }
 
+@keyframes betmate-float-a {
+  0%, 100% { transform: translateY(0px);  }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes betmate-float-b {
+  0%, 100% { transform: translateY(-4px); }
+  50%       { transform: translateY(4px);  }
+}
+@keyframes betmate-float-c {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(6px); }
+}
+@utility animate-float-a {
+  animation: betmate-float-a 4s ease-in-out infinite;
+  will-change: transform;
+}
+@utility animate-float-b {
+  animation: betmate-float-b 5s ease-in-out infinite;
+  will-change: transform;
+}
+@utility animate-float-c {
+  animation: betmate-float-c 4.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes betmate-pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.5; }
+  100% { transform: scale(2.4); opacity: 0;   }
+}
+@utility animate-pulse-ring {
+  animation: betmate-pulse-ring 2s ease-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes betmate-coin-spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+@utility animate-coin-spin {
+  animation: betmate-coin-spin 2.5s linear infinite;
+  will-change: transform;
+}
+
+@keyframes betmate-head-bob {
+  0%, 100% { transform: translateY(0px);  }
+  50%       { transform: translateY(-6px); }
+}
+@utility animate-head-bob {
+  animation: betmate-head-bob 2.2s ease-in-out infinite;
+  will-change: transform;
+}
+
 /* ── Scrollbar (dark mode) ── */
 .dark ::-webkit-scrollbar {
   width: 6px;
