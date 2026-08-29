@@ -219,6 +219,7 @@ body {
   will-change: transform;
 }
 
+
 /* ── Scrollbar (dark mode) ── */
 .dark ::-webkit-scrollbar {
   width: 6px;

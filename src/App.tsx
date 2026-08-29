@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PublicShell } from "@/components/layout/PublicShell";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const LandingPage = lazy(() => import("@/pages/LandingPage"));
+const LandingPage = lazy(() => import("@/pages/public/LandingPage"));
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const RegisterPage = lazy(() => import("@/pages/RegisterPage"));
 const HomePage = lazy(() => import("@/pages/HomePage"));
