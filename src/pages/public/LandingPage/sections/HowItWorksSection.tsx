@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { UserPlus, Swords, Medal, ChevronRight } from "lucide-react";
-import { type ElementType } from "react";
+import { type ElementType, type ReactElement } from "react";
 import { cn } from "@/lib/utils";
 import { fadeUp, stagger } from "../motionPresets";
 
@@ -151,7 +151,7 @@ interface Step {
   badge: string;
   topFrom: string;
   topTo: string;
-  Visual: () => JSX.Element;
+  Visual: () => ReactElement;
 }
 
 const STEPS: Step[] = [
