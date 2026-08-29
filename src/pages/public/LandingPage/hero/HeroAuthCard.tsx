@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   Mail,
@@ -20,7 +20,7 @@ import { AvatarStack } from "@/components/ui/user-avatar";
 import { cn } from "@/lib/utils";
 import { SOCIAL_USERS } from "../constants";
 
-const slideVariants = {
+const slideVariants: Variants = {
   enter: { opacity: 0, y: 12, scale: 0.98 },
   center: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.26, ease: "easeOut" } },
   exit: { opacity: 0, y: -8, scale: 0.98, transition: { duration: 0.16, ease: "easeIn" } },
